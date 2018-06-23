@@ -1,5 +1,5 @@
 /*
-  Determines if creeps should spawn on each game tick.  If a creep should spawn it determines which type to spawn
+  Determines if creeps should spawn on each game tick.  If a creep should spawn it determines which role to spawn
 */
 import spawnPriorities from './spawnPriorities';
 import get from 'lodash/get';
@@ -7,59 +7,47 @@ import filter from 'lodash/filter'
 
 
 /**
- * returns all the creeps in the game with the specified type
- * @param {string} type - The type of creep to search for 
+ * returns all the creeps in the game with the specified role
+ * @param {string} role - The role of creep to search for 
  */
-function getCreepsOfType(type) {
-  const gameCreeps = get(Game, 'gameCreeps', [])
+function getCreepsOfRole(role) {
+  const gameCreeps = get(Game, 'creeps', [])
 
-  // filter all the game's creeps for only the creeps of the given type
-  return filter(gameCreeps, (creep) => (creepType = creep.memory.type));
+  // filter all the game's creeps for only the creeps of the given role
+  return filter(gameCreeps, (creep) => (role === creep.memory.role));
 }
 
 /**
- * Analyze the configured creep type priority and possibly spawn a creep of that type
+ * Analyze the configured creep role priority and possibly spawn a creep of that role
  * @param {*} priority 
  */
 function evaluatePriority(priority) {
   const creep = priority.creep;
 
-  // check with the priority if it should spawn. If it shouldn't, then just skip this priority
-  const shouldSpawn = creep.shouldSpawn();
-  if (shouldSpawn === false) {
-    // we should not spawn this.  Exit this function early
-    return;
-  }
+  // should spawn check
+  if (!creep.shouldSpawn()) return;
 
-  const creepType = creep.type;
-
-  // get all the creeps in the game for this priority's creep type
-  const existingCreepsOfType = getCreepsOfType(creepType);
-
-  // get how many creeps of this type already exist
-  const numberOfExistingCreeps = existingCreepsOfType.length;
-
-  // if the number of existing creep types is greater than or equal to the max count, skip this priority
-  if (numberOfExistingCreeps >= priority.maxCount) {
-    // we should not spawn this.  Exit this function early
-    return;
-  }
+  // max creeps of role exceeded check
+  const existingCreepsOfRole = getCreepsOfRole(creep.role);
+  if (existingCreepsOfRole.length >= priority.maxCount) return;
 
   // we should spawn this creep, but make sure we can even spawn it
-  for (const spawn in Game.spawns) {
+  for (const spawnName in Game.spawns) {
+    const spawn = Game.spawns[spawnName];
+    const creepName = `${creep.role}-${existingCreepsOfRole.length + 1}`;
     // specifying "dryRun" as an option returns if the creep can be spawned, but doesn't actually spawn it
-    const canSpawn = Game.spawns[spawn].spawnCreep(creep.body, null, {dryRun: true})
+    const canSpawn = spawn.spawnCreep(creep.body, creepName, {dryRun: true})
 
     // if this spawn is capable of spawning this
-    if (canSpawn) {
+    if (canSpawn === OK) {
       const spawnOptions = {
         memory: {
-          type: creep.type
+          role: creep.role
         }
       }
 
-      console.log(`Spawning creep with body: ${JSON.stringify(creep.body)} and options ${JSON.stringify(spawnOptions)}`)
-      Game.spawns[spawn].spawnCreep(creep.body, null, spawnOptions)
+      console.log(`Spawning creep with name ${creepName}, body: ${JSON.stringify(creep.body)}, options ${JSON.stringify(spawnOptions)}`)
+      const returnVal = spawn.spawnCreep(creep.body, creepName, spawnOptions);
     }
   }
 }
