@@ -2,6 +2,8 @@
   Determines if creeps should spawn on each game tick.  If a creep should spawn it determines which type to spawn
 */
 import spawnPriorities from './spawnPriorities';
+import get from 'lodash/get';
+import filter from 'lodash/filter'
 
 
 /**
@@ -9,10 +11,10 @@ import spawnPriorities from './spawnPriorities';
  * @param {string} type - The type of creep to search for 
  */
 function getCreepsOfType(type) {
-  const gameCreeps = _.get(Game, 'gameCreeps', [])
+  const gameCreeps = get(Game, 'gameCreeps', [])
 
   // filter all the game's creeps for only the creeps of the given type
-  return _.filter(gameCreeps, (creep) => (creepType = creep.memory.type));
+  return filter(gameCreeps, (creep) => (creepType = creep.memory.type));
 }
 
 /**
@@ -45,9 +47,8 @@ function evaluatePriority(priority) {
 
   // we should spawn this creep, but make sure we can even spawn it
   for (const spawn in Game.spawns) {
-    console.log(JSON.stringify(spawn));
     // specifying "dryRun" as an option returns if the creep can be spawned, but doesn't actually spawn it
-    const canSpawn = spawn.spawnCreep(creep.body, null, {dryRun: true})
+    const canSpawn = Game.spawns[spawn].spawnCreep(creep.body, null, {dryRun: true})
 
     // if this spawn is capable of spawning this
     if (canSpawn) {
@@ -56,13 +57,14 @@ function evaluatePriority(priority) {
           type: creep.type
         }
       }
-      spawn.spawnCreep(creep.body, null, spawnOptions)
+
+      console.log(`Spawning creep with body: ${JSON.stringify(creep.body)} and options ${JSON.stringify(spawnOptions)}`)
+      Game.spawns[spawn].spawnCreep(creep.body, null, spawnOptions)
     }
   }
 }
 
 const spawnCreeps = () => {
-  console.log("Spawning Creeps");
   spawnPriorities.forEach(evaluatePriority);
 }
 

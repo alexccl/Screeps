@@ -5,12 +5,14 @@
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "rollup ./src/entry.js --format cjs --file main.js"
+    "build": "rollup --config rollup.config.js"
   },
   "author": "Alex Luebbehusen <al178@evansville.edu>",
   "license": "ISC",
   "dependencies": {
-    "lodash": "^4.17.10"
+    "lodash": "^4.17.10",
+    "rollup-plugin-commonjs": "^9.1.3",
+    "rollup-plugin-node-resolve": "^3.3.0"
   },
   "repository": "https://al178@bitbucket.org/al178/screeps.git"
 }
