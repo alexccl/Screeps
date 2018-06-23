@@ -1,0 +1,16 @@
+{
+  "name": "Screeps",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rollup ./src/main.js --format cjs --file main.js"
+  },
+  "author": "Alex Luebbehusen <al178@evansville.edu>",
+  "license": "ISC",
+  "dependencies": {
+    "lodash": "^4.17.10"
+  },
+  "repository": "https://al178@bitbucket.org/al178/screeps.git"
+}
