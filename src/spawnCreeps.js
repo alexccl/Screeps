@@ -19,17 +19,18 @@ function getCreepsOfRole(role) {
 
 /**
  * Analyze the configured creep role priority and possibly spawn a creep of that role
- * @param {*} priority 
+ * @param {*} priority - the configured creep priority
+ * @returns {boolean} - true if priority is satisfied
  */
 function evaluatePriority(priority) {
   const creep = priority.creep;
 
   // should spawn check
-  if (!creep.shouldSpawn()) return;
+  if (!creep.shouldSpawn()) return true;
 
   // max creeps of role exceeded check
   const existingCreepsOfRole = getCreepsOfRole(creep.role);
-  if (existingCreepsOfRole.length >= priority.maxCount) return;
+  if (existingCreepsOfRole.length >= priority.maxCount) return true;
 
   // we should spawn this creep, but make sure we can even spawn it
   for (const spawnName in Game.spawns) {
@@ -47,13 +48,24 @@ function evaluatePriority(priority) {
       }
 
       console.log(`Spawning creep with name ${creepName}, body: ${JSON.stringify(creep.body)}, options ${JSON.stringify(spawnOptions)}`)
-      const returnVal = spawn.spawnCreep(creep.body, creepName, spawnOptions);
+      spawn.spawnCreep(creep.body, creepName, spawnOptions);
+
+      // evaluate if this new creep satisfies priority in next loop
+      return false;
+    } else {
+      // we wanted to spawn this creep, but we unable to.  This priority is not satisfied
+      return false;
     }
   }
 }
 
 const spawnCreeps = () => {
-  spawnPriorities.forEach(evaluatePriority);
+  spawnPriorities.reduce((higherPrioritesCompleted, priority) => {
+    if (!higherPrioritesCompleted) return higherPrioritesCompleted;
+
+    const priorityCompleted = evaluatePriority(priority);
+    return priorityCompleted;
+  }, true);
 }
 
 export default spawnCreeps;
