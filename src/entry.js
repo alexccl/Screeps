@@ -5,6 +5,7 @@ const loop = function () {
     console.log('executing loop----------------------------------------------');
     spawnCreeps();
     executeRoles();
+    console.log('loop complete');
 }
 
 export default {
