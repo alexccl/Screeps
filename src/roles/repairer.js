@@ -31,7 +31,7 @@ export default {
             collectEnergyFromEnergyStorages(creep);
         }
         else {
-            creepEnergyHarvesting(1, creep);
+            creepEnergyHarvesting(0, creep);
     	}
     }
 };
