@@ -2,6 +2,8 @@ import {getPosForRoadBuild} from '../util/roadConstructionPlanner'
 import {creepEnergyHarvesting, collectEnergyFromEnergyStorages, doEnergyStoragesExist} from './util/energyGathering'
 import {isCreepExecutingMainObjective} from './util/currentObjectiveIdentification'
 
+// this is a road building road
+
 export default {
     /** @param {Creep} - creep to execute role on **/
     run: (creep) => {
