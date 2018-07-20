@@ -1,7 +1,11 @@
 import harvester from './harvester';
-import controllerUpgrader from './controllerUpgrader';
+import controllerUpgrader from './upgrader';
+import roadBuilder from './roadbuilder';
+import repairer from './repairer'
 
 export {
   harvester,
-  controllerUpgrader
+  controllerUpgrader,
+  roadBuilder,
+  repairer
 }

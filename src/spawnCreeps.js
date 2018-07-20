@@ -35,15 +35,15 @@ function evaluatePriority(priority) {
   // we should spawn this creep, but make sure we can even spawn it
   for (const spawnName in Game.spawns) {
     const spawn = Game.spawns[spawnName];
-    const creepName = `${creep.role}-${existingCreepsOfRole.length + 1}`;
+    const creepName = `${creep.role}-${spawn.pos.roomName}-${Game.time}`;
     // specifying "dryRun" as an option returns if the creep can be spawned, but doesn't actually spawn it
     const canSpawn = spawn.spawnCreep(creep.body, creepName, {dryRun: true})
-
     // if this spawn is capable of spawning this
     if (canSpawn === OK) {
       const spawnOptions = {
         memory: {
-          role: creep.role
+          role: creep.role,
+          roomName: spawn.pos.roomName 
         }
       }
 
