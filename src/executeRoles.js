@@ -1,7 +1,9 @@
 import {roles} from './util/constants';
 import {
   harvester,
-  controllerUpgrader
+  controllerUpgrader,
+  roadBuilder,
+  repairer
 } from './roles';
 
 /**
@@ -16,6 +18,12 @@ const executeRoles = () => {
         break;
       case roles.controllerUpgrader:
         controllerUpgrader.run(creep);
+        break;
+      case roles.roadBuilder:
+        roadBuilder.run(creep);
+        break;
+      case roles.repairer:
+        repairer.run(creep);
         break;
       default:
         console.log(`No registered role executor for role of type: ${creep.memory.role}`);
