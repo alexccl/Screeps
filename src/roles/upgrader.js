@@ -1,6 +1,9 @@
+import {markPosForRoadBuild} from '../util/roadConstructionPlanner';
+
 export default {
   /** @param {Creep} - creep to execute role on **/
   run: (creep) => {
+    markPosForRoadBuild(creep.pos);
     if(creep.carry.energy === 0) {
       const sources = creep.room.find(FIND_SOURCES);
       if(creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {

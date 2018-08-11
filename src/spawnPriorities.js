@@ -50,15 +50,15 @@ export default [
     maxCount: 3
   },
   {
-    creep: controllerUpgraderCreep,
-    maxCount: 2
-  },
-  {
     creep: roadBuilderCreep,
     maxCount: 4
   },
   {
     creep:repairerCreep,
     maxCount: 3
+  },
+  {
+    creep: controllerUpgraderCreep,
+    maxCount: 2
   }
 ]
