@@ -1,6 +1,5 @@
 import find from 'lodash/find';
 import filter from 'lodash/filter';
-import get from 'lodash/get';
 
 const safeGetPersistedSites = () => (Memory.plannedRoadBuildSites || []);
 
@@ -9,13 +8,13 @@ const getPersistedPosition = (pos) => ({
   y: pos.y,
   roomName: pos.roomName,
   registerCount: 0,
-  roadBuilt: false
+  roadBuilt: false,
+  buildStarted: false
 });
 
 const getConstructionSiteAtPos = (pos) => {
   const matchingKey = Object.keys(Game.constructionSites).find(key => {
       const site = Game.constructionSites[key];
-      console.log(site);
       return site.pos.x === pos.x && site.pos.y === pos.y;
   });
 
@@ -75,10 +74,16 @@ const sanitizePlannedBuildSites = () => {
 const getCurrentBuildSite = () => {
   // sanitize the
   const sites = safeGetPersistedSites();
-  const filteredSites = sites.filter(site => !site.roadBuilt);
-  filteredSites.sort((siteA, siteB) => (siteB.registerCount - siteA.registerCount));
+  const notBuildFilter = sites.filter(site => !site.roadBuilt);
+  const currentBuildingSite = notBuildFilter.find(site => site.buildStarted);
+  if (currentBuildingSite) return currentBuildingSite;
 
-  return filteredSites[0];
+  // no current build, find next one and persist
+  notBuildFilter.sort((siteA, siteB) => (siteB.registerCount - siteA.registerCount));
+  const newBuildSite = notBuildFilter[0];
+  const updatedPosToCurrentBuild = Object.assign({}, newBuildSite, {buildStarted: true});
+  updatePersistedPosObj(updatedPosToCurrentBuild);
+  return updatedPosToCurrentBuild;
 };
 
 /**
@@ -99,14 +104,14 @@ function markPosForRoadBuild (rawPos) {
 * Get the next open position for a road build
 */
 function getPosForRoadBuild () {
-   const buildSite = getCurrentBuildSite();
+  sanitizePlannedBuildSites()
+  const buildSite = getCurrentBuildSite();
 
   if (!buildSite) {
     console.error('All build sites have been used.  This scenario has yet to be implemented');
     return null;
   }
-
-  Game.rooms[buildSite.roomName].createConstructionSite(buildSite.x, buildSite.y, STRUCTURE_ROAD, siteKey);
+  Game.rooms[buildSite.roomName].createConstructionSite(buildSite.x, buildSite.y, STRUCTURE_ROAD);
 
   return getConstructionSiteAtPos(buildSite);
 }

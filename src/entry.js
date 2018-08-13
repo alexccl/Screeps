@@ -1,11 +1,15 @@
-import spawnCreeps from './spawnCreeps';
 import executeRoles from './executeRoles';
+import cleanUp from './util/cleanUp';
+import towerDefense from './roomDefense/towerDefense';
+import spawnCreeps from './spawnCreeps/spawnCreeps';
 
 const loop = function () {
-    // console.log('executing loop----------------------------------------------');
+    console.log('executing loop----------------------------------------------');
     spawnCreeps();
     executeRoles();
-    // console.log('loop complete');
+    cleanUp();
+    towerDefense();
+    console.log('loop complete');
 }
 
 export default {
