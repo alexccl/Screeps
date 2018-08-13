@@ -1,20 +1,21 @@
 //Configuration for spawn priorities.  Which creeps should spawn first?
-import { roles } from './util/constants';
+import { roles } from '../util/constants';
+import bodyParts from './creepBodyParts'
 
 /** Very basic creep to start game */
 const harvesterCreep = {
   role: roles.harvester,
-  body: [WORK, CARRY, MOVE, MOVE],
+  body: bodyParts,
   shouldSpawn: function () {
     // at this point, just always return true.  It should aways spawn it
     return true;
   }
 }
 
-/** Upgrades the controls */
+/** Upgrades the controller */
 const controllerUpgraderCreep = {
   role: roles.controllerUpgrader,
-  body: [WORK, CARRY, MOVE, MOVE],
+  body: bodyParts,
   shouldSpawn: function () {
     // at this point, just always return true.  It should aways spawn it
     return true;
@@ -24,7 +25,7 @@ const controllerUpgraderCreep = {
 /** Repairs structures */
 const repairerCreep = {
   role: roles.repairer,
-  body: [WORK, CARRY, MOVE, MOVE],
+  body: bodyParts,
   shouldSpawn: function () {
     // at this point, just always return true.  It should aways spawn it
     return true;
@@ -34,7 +35,7 @@ const repairerCreep = {
 /** Builds roads */
 const roadBuilderCreep = {
   role: roles.roadBuilder,
-  body: [WORK, CARRY, MOVE, MOVE],
+  body: bodyParts,
   shouldSpawn: function () {
     // at this point, just always return true.  It should aways spawn it
     return true;
@@ -51,7 +52,7 @@ export default [
   },
   {
     creep: roadBuilderCreep,
-    maxCount: 4
+    maxCount: 2
   },
   {
     creep:repairerCreep,
@@ -59,6 +60,6 @@ export default [
   },
   {
     creep: controllerUpgraderCreep,
-    maxCount: 2
+    maxCount: 3
   }
 ]

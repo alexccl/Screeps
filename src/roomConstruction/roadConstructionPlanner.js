@@ -1,6 +1,5 @@
 import find from 'lodash/find';
 import filter from 'lodash/filter';
-import get from 'lodash/get';
 
 const safeGetPersistedSites = () => (Memory.plannedRoadBuildSites || []);
 
@@ -112,7 +111,6 @@ function getPosForRoadBuild () {
     console.error('All build sites have been used.  This scenario has yet to be implemented');
     return null;
   }
-  console.log('Proposed build site', JSON.stringify(buildSite));
   Game.rooms[buildSite.roomName].createConstructionSite(buildSite.x, buildSite.y, STRUCTURE_ROAD);
 
   return getConstructionSiteAtPos(buildSite);

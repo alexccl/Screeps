@@ -1,6 +1,5 @@
-import {getPosForRoadBuild} from '../util/roadConstructionPlanner'
+import {getPosForRoadBuild} from '../roomConstruction/roadConstructionPlanner'
 import {creepEnergyHarvesting, collectEnergyFromEnergyStorages, doEnergyStoragesExist} from './util/energyGathering'
-import {isCreepExecutingMainObjective} from './util/currentObjectiveIdentification'
 
 // this is a road building road
 
